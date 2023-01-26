@@ -1,16 +1,36 @@
 from django.db import models
 
 
+class AuthorArt(models.Model):
+    full_name = models.CharField(max_length=150)
+
+
+class Tag(models.Model):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, primary_key=True, blank=True)
+
+
 class Category(models.Model):
     title = models.CharField(max_length=100)
-    slug = models.SlugField(primary_key=True)
+    slug = models.SlugField(max_length=100, primary_key=True, blank=True)
 
 
 class ArtGallery(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='categories')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
-    title = models.CharField()
-    image = models.ImageField(upload_to='images_art')
+    # owner = models.ForeignKey(User, on_delete=models.CASCADE,
+    #                           related_name='users')
+    category = models.ManyToManyField(Category,
+                                      related_name='categories')
+    tag = models.ManyToManyField(Tag, related_name='tags')
+    author_art = models.ManyToManyField(AuthorArt, related_name='authors')
+    title = models.CharField(max_length=255)
     price = models.PositiveIntegerField()
     description = models.TextField()
-    years_drown = models.DateField()
+    size_x = models.PositiveIntegerField()
+    size_y = models.PositiveIntegerField()
+    publication_date = models.DateField()
+    image = models.FileField(blank=True)
+
+
+class PostImage(models.Model):
+    art = models.ForeignKey(ArtGallery, default=None, on_delete=models.CASCADE)
+    images = models.FileField(upload_to='images/')
