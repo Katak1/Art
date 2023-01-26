@@ -13,7 +13,7 @@ class Order(models.Model):
         ('closed', 'Закрыт')
     )
 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='users')
-    art = models.ForeignKey(ArtGallery, on_delete=models.SET_NULL, related_name='arts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customers')
+    art = models.ForeignKey(ArtGallery, on_delete=models.CASCADE, related_name='arts')
     status = models.CharField(max_length=10, choices=STATUS_CHOISES, default='open')
     order_date = models.DateTimeField(auto_now=True)
